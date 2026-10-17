@@ -11,6 +11,7 @@ const navigation = [
     items: [
       { id: 'withdrawals', label: 'Saques', icon: 'wallet' },
       { id: 'checkout', label: 'Checkout', icon: 'card' },
+      { id: 'fees', label: 'Taxas', icon: 'percent' },
     ],
   },
 ]
@@ -43,6 +44,7 @@ function NavigationIcon({ name }) {
         <path d="M3 10h18m-14 5h4" />
       </>
     ),
+    percent: <path d="M19 5 5 19m15-1a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM8 6a2 2 0 1 1-4 0 2 2 0 0 1 4 0Z" />,
   }
 
   return (

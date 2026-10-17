@@ -43,6 +43,15 @@ async function post(path, body, { token, authenticated = true } = {}) {
   }, { token, authenticated })
 }
 
+async function patch(path, body, { token, authenticated = true } = {}) {
+  const url = new URL(`${baseUrl}${path}`, window.location.origin)
+  return request(url, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  }, { token, authenticated })
+}
+
 async function put(path, body, { token, authenticated = true } = {}) {
   const url = new URL(`${baseUrl}${path}`, window.location.origin)
   return request(url, {
@@ -83,6 +92,7 @@ export const api = {
   },
 
   post,
+  patch,
 
   async login(credentials) {
     return post('/auth/login', credentials, { authenticated: false })

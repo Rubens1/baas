@@ -35,6 +35,8 @@ All routes use the `/api` prefix.
 | `POST` | `/auth/login` | Authenticates with email and password and returns a local session. |
 | `POST` | `/auth/logout` | Revokes the authenticated local session. |
 | `GET` | `/fees?method=CARD&brand=...` | Lists fee rates stored in the database. |
+| `POST` | `/fees` | Creates a fee rate, or updates the existing rate with the same method, brand and installments. |
+| `PATCH` | `/fees/:id` | Updates the percentage of an existing fee rate. |
 | `POST` | `/checkouts` | Creates a PIX or card checkout. Card accepts installments and an optional brand. |
 | `GET` | `/checkouts?status=...` | Lists the authenticated merchant's checkouts. |
 | `GET` | `/checkouts/:id` | Gets a checkout and its applied rate. |

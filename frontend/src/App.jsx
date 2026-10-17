@@ -5,8 +5,9 @@ import Login from './pages/Login'
 import Cadastro from './pages/Cadastro'
 import Transacoes from './pages/Transacoes'
 import Dashboard from './pages/Dashboard'
-import CheckoutForm from './pages/CheckoutForm'
+import Checkout from './pages/Checkout'
 import Saques from './pages/Saques'
+import Taxas from './pages/Taxas'
 import { api } from './services/api'
 import { clearAuthSession, getAuthSession, saveAuthSession } from './services/auth'
 import './App.css'
@@ -100,8 +101,9 @@ function App() {
         <main className="page-content">
           {activeItem === 'dashboard' && <Dashboard onNavigate={navigate} user={authSession.merchant} />}
           {activeItem === 'transactions' && <Transacoes />}
-          {activeItem === 'checkout' && <CheckoutForm />}
+          {activeItem === 'checkout' && <Checkout />}
           {activeItem === 'withdrawals' && <Saques />}
+          {activeItem === 'fees' && <Taxas />}
         </main>
       </div>
     </div>

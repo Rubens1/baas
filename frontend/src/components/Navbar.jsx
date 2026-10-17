@@ -5,6 +5,7 @@ const pageTitles = {
   transactions: 'Transações',
   withdrawals: 'Saques',
   checkout: 'Checkout',
+  fees: 'Taxas',
 }
 
 function Icon({ name }) {

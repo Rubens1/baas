@@ -27,8 +27,9 @@ const statuses = {
   CANCELLED: 'Cancelado',
 }
 
-export default function CheckoutForm() {
+export default function Checkout() {
   const [method, setMethod] = useState('PIX')
+  const [brand, setBrand] = useState('ALL')
   const [amount, setAmount] = useState('')
   const [installments, setInstallments] = useState('1')
   const [fees, setFees] = useState([])
@@ -48,7 +49,9 @@ export default function CheckoutForm() {
       setFeesLoading(true)
       setFeesError('')
       try {
-        const response = await api.get('/fees', { params: { method } })
+        const response = await api.get('/fees', {
+          params: { method, ...(method === 'CARD' ? { brand } : {}) },
+        })
         if (!isCurrent) return
         setFees(response.data)
         const firstInstallment = response.data[0]?.installments
@@ -65,7 +68,7 @@ export default function CheckoutForm() {
     return () => {
       isCurrent = false
     }
-  }, [method])
+  }, [method, brand])
 
   useEffect(() => {
     let isCurrent = true
@@ -90,9 +93,12 @@ export default function CheckoutForm() {
   }, [])
 
   const selectedFee = useMemo(
-    () => fees.find((fee) => fee.installments === Number(installments)),
-    [fees, installments],
+    () =>
+      fees.find((fee) => fee.installments === Number(installments) && fee.brand === brand) ??
+      fees.find((fee) => fee.installments === Number(installments) && fee.brand === 'ALL'),
+    [fees, installments, brand],
   )
+  const availableInstallments = [...new Set(fees.map((fee) => fee.installments))]
   const numericAmount = Number(amount)
   const feeAmount = selectedFee && numericAmount > 0
     ? Math.round(numericAmount * selectedFee.feePercent) / 100
@@ -108,7 +114,7 @@ export default function CheckoutForm() {
       const response = await api.post('/checkouts', {
         method,
         amount: numericAmount,
-        ...(method === 'CARD' ? { installments: Number(installments) } : {}),
+        ...(method === 'CARD' ? { installments: Number(installments), brand } : {}),
       })
       setCreatedCheckout(response.data)
       setCheckouts((current) => [response.data, ...current])
@@ -145,6 +151,7 @@ export default function CheckoutForm() {
                 value={method}
                 onChange={(event) => {
                   setMethod(event.target.value)
+                  setBrand('ALL')
                   setInstallments('1')
                   setCreatedCheckout(null)
                 }}
@@ -172,6 +179,16 @@ export default function CheckoutForm() {
             </label>
 
             {method === 'CARD' && (
+              <>
+              <label className="checkout-field">
+                <span>Bandeira (opcional)</span>
+                <input
+                  maxLength="32"
+                  onChange={(event) => setBrand(event.target.value.trim().toUpperCase() || 'ALL')}
+                  placeholder="ALL para todas"
+                  value={brand === 'ALL' ? '' : brand}
+                />
+              </label>
               <label className="checkout-field">
                 <span>Parcelas</span>
                 <select
@@ -179,13 +196,14 @@ export default function CheckoutForm() {
                   onChange={(event) => setInstallments(event.target.value)}
                   disabled={feesLoading || fees.length === 0}
                 >
-                  {fees.map((fee) => (
-                    <option key={fee.id} value={fee.installments}>
-                      {fee.installments}x
+                  {availableInstallments.map((availableInstallment) => (
+                    <option key={availableInstallment} value={availableInstallment}>
+                      {availableInstallment}x
                     </option>
                   ))}
                 </select>
               </label>
+              </>
             )}
 
             {feesLoading ? (

@@ -340,9 +340,6 @@ export default function Saques() {
 
           {submitError && <p className="withdrawal-error" role="alert">{submitError}</p>}
           {successMessage && <p className="withdrawal-success" role="status">{successMessage}</p>}
-          <p className="withdrawal-note">
-            O backend registra o saque em modo de simulação local e marca a operação como concluída.
-          </p>
 
           <button
             className="checkout-submit"
